@@ -8,7 +8,7 @@ from urllib.request import urlretrieve
 from downloader import download_and_unzip
 
 URL = r"https://www.dropbox.com/s/48hboi1m4crv1tl/opencv_bootcamp_assets_NB3.zip?dl=1"
-folder_path = r"/home/kaushik/opencv/utils"
+folder_path = r"/home/kaushik/OpenCV_bootcamp/utils"
 asset_zip_path = os.path.join(folder_path, "opencv_bootcamp_assets_NB3.zip")
 
 #download
