@@ -118,3 +118,57 @@ plt.imshow(img_bit_xor, cmap="gray")
 plt.show()
 
 #logo manipulation
+
+#Read foreground image
+img_bgr_foreground = cv2.imread("utils/coca-cola-logo.png")
+img_rgb_foreground = cv2.cvtColor(img_bgr_foreground, cv2.COLOR_BGR2RGB)
+plt.imshow(img_rgb_foreground)
+plt.show()
+
+logo_h = img_rgb_foreground.shape[0]
+logo_w = img_rgb_foreground.shape[1]
+
+#read background color
+img_bgr_background = cv2.imread("utils/checkerboard_color.png")
+img_rgb_background = cv2.cvtColor(img_bgr_background, cv2.COLOR_BGR2RGB)
+
+#set desired width and maintain image aspect ratio
+aspect_ratio = logo_w / img_rgb_background.shape[1]
+dim = (logo_w, int(img_rgb_background.shape[0] * aspect_ratio))
+
+#resize background image to same size as logo image
+img_rgb_background = cv2.resize(img_rgb_background, dim, interpolation=cv2.INTER_AREA)
+
+plt.imshow(img_rgb_background)
+plt.show()
+
+#create mask for original image
+img_gray_foreground = cv2.cvtColor(img_rgb_foreground, cv2.COLOR_RGB2GRAY)
+
+
+#apply global thresholding to create binary mask
+retval, img_mask = cv2.threshold(img_gray_foreground, 127, 255, cv2.THRESH_BINARY)
+plt.imshow(img_mask, cmap="gray")
+plt.show()
+
+#invert the mask
+img_mask_inv = cv2.bitwise_not(img_mask)
+plt.imshow(img_mask_inv, cmap="gray")
+
+#apply background on the mask
+
+img_background = cv2.bitwise_and(img_rgb_background, img_rgb_background, mask=img_mask)
+plt.imshow(img_background)
+plt.show()
+
+#isolate foreground from image
+img_foreground = cv2.bitwise_and(img_rgb_foreground, img_rgb_foreground, mask=img_mask_inv)
+plt.imshow(img_foreground)
+plt.show()
+
+#merge foreground and background
+result = cv2.add(img_background, img_foreground)
+plt.imshow(result)
+plt.show()
+
+cv2.imwrite("utils/logo_final.png", result[:,:,::-1])
